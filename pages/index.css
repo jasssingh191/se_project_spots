@@ -1,4 +1,4 @@
-@import url(../vendor/fonts/normalize.css);
+@import url(../vendor/normalize.css);
 @import url(../vendor/fonts.css);
 @import url(../blocks/page.css);
 @import url(../blocks/content.css);
@@ -7,3 +7,4 @@
 @import url(../blocks/cards.css);
 @import url(../blocks/card.css);
 @import url(../blocks/footer.css);
+@import url(../blocks/modal.css);

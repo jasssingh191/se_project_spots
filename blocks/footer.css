@@ -1,17 +1,16 @@
 .footer {
-  min-height: 100vh;
+  padding: 60px 0;
 }
 
 .footer__copyright {
-  margin-top: 60px;
-  margin-bottom: 60px;
+  margin: 0;
   display: flex;
   justify-content: center;
   font-family: "poppins", Arial, sans-serif;
-  font-style: regular;
+  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 100%;
   color: #212121;
-  opacity: 70%;
+  opacity: 0.7;
 }
