@@ -11,6 +11,7 @@
     "url": "git+https://github.com/jasssingh191-code/se_project_coffeeshop.git"
   },
   "scripts": {
+    "dev": "webpack-dev-server",
     "build": "webpack --mode production",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
