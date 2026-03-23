@@ -32,6 +32,8 @@ const editProfileNameInput = editProfileModal.querySelector(
 const editProfileDescriptionInput = editProfileModal.querySelector(
   "#profile-description-input",
 );
+const editProfileSubmitBtn =
+  editProfileModal.querySelector(".modal__submit-btn");
 
 // New post modal elements
 const newPostBtn = document.querySelector(".profile__add-btn");
@@ -40,6 +42,7 @@ const newPostCloseBtn = newPostModal.querySelector(".modal__close-btn");
 const addCardFormElement = newPostModal.querySelector(".modal__form");
 const linkInputEl = newPostModal.querySelector("#card-image-input");
 const nameInputEl = newPostModal.querySelector("#card-caption-input");
+const addCardSubmitBtn = newPostModal.querySelector(".modal__submit-btn");
 
 // Avatar modal elements
 const avatarModal = document.querySelector("#profile__avatar-modal");
@@ -50,7 +53,10 @@ const avatarInputEl = avatarModal.querySelector("#profile__avatar-input");
 
 // Delete modal elements
 const deleteModal = document.querySelector("#delete-modal");
-const deleteConfirmBtn = deleteModal.querySelector(".modal__submit-btn");
+const deleteForm = document.querySelector("#delete-form");
+const deleteCancelBtn = deleteModal.querySelector(".modal__cancel-btn");
+const deleteClosBtn = deleteModal.querySelector(".modal__close-btn");
+const deleteSubmitBtn = deleteForm.querySelector(".modal__submit-btn");
 
 // Preview modal elements
 const previewModal = document.querySelector("#preview-modal");
@@ -59,8 +65,8 @@ const previewImageEl = previewModal.querySelector(".modal__image");
 const previewCaptionEl = previewModal.querySelector(".modal__caption");
 
 // Delete state
-let cardToDelete = null;
-let cardElementToDelete = null;
+let selectedCard;
+let selectedCardId;
 
 // Initial data load
 Promise.all([api.getInitialCards(), api.getUserInfo()])
@@ -88,6 +94,10 @@ function getCardElement(data) {
   cardImageEl.alt = data.name;
   cardTitleEl.textContent = data.name;
 
+  if (data.isLiked) {
+    cardLikeBtnEl.classList.add("card__like-btn-active");
+  }
+
   cardLikeBtnEl.addEventListener("click", () => {
     const isLiked = cardLikeBtnEl.classList.contains("card__like-btn-active");
     const likeAction = isLiked
@@ -100,11 +110,10 @@ function getCardElement(data) {
       .catch(console.error);
   });
 
-  cardDeleteBtnEl.addEventListener("click", () => {
-    cardToDelete = data._id;
-    cardElementToDelete = cardElement;
-    openModal(deleteModal);
-  });
+  // Pass both cardElement and data to the delete handler
+  cardDeleteBtnEl.addEventListener("click", () =>
+    handleDeleteCard(cardElement, data),
+  );
 
   cardImageEl.addEventListener("click", () => {
     previewImageEl.src = data.link;
@@ -142,9 +151,34 @@ function closeOnEscape(evt) {
   }
 }
 
+// Delete handlers
+function handleDeleteCard(cardElement, data) {
+  selectedCard = cardElement; 
+  selectedCardId = data._id; 
+  openModal(deleteModal);
+}
+
+function handleDeleteSubmit(evt) {
+  evt.preventDefault();
+  deleteSubmitBtn.textContent = "Deleting..."; 
+  api
+    .deleteCard(selectedCardId)
+    .then(() => {
+      selectedCard.remove();
+      closeModal(deleteModal);
+      selectedCard = null;
+      selectedCardId = null;
+    })
+    .catch(console.error)
+    .finally(() => {
+      deleteSubmitBtn.textContent = "Delete"; 
+    });
+}
+
 // Form handlers
 function handleEditProfileSubmit(evt) {
   evt.preventDefault();
+  editProfileSubmitBtn.textContent = "Saving...";
   api
     .editUserInfo({
       name: editProfileNameInput.value,
@@ -155,7 +189,10 @@ function handleEditProfileSubmit(evt) {
       profileDescriptionEl.textContent = data.about;
       closeModal(editProfileModal);
     })
-    .catch(console.error);
+    .catch(console.error)
+    .finally(() => {
+      editProfileSubmitBtn.textContent = "Save";
+    });
 }
 
 function handleAvatarSubmit(evt) {
@@ -176,6 +213,7 @@ function handleAvatarSubmit(evt) {
 
 function handleAddCardSubmit(evt) {
   evt.preventDefault();
+  addCardSubmitBtn.textContent = "Saving..."; 
   api
     .createCard({
       name: nameInputEl.value,
@@ -187,7 +225,9 @@ function handleAddCardSubmit(evt) {
       closeModal(newPostModal);
       evt.target.reset();
     })
-    .catch(console.error);
+    .catch(console.error)
+    .finally(() => {
+      addCardSubmitBtn.textContent = "Save"; 
 }
 
 // Event listeners
@@ -225,16 +265,14 @@ avatarModalCloseBtn.addEventListener("click", function () {
 
 avatarForm.addEventListener("submit", handleAvatarSubmit);
 
-deleteConfirmBtn.addEventListener("click", () => {
-  api
-    .deleteCard(cardToDelete)
-    .then(() => {
-      cardElementToDelete.remove();
-      closeModal(deleteModal);
-      cardToDelete = null;
-      cardElementToDelete = null;
-    })
-    .catch(console.error);
+deleteForm.addEventListener("submit", handleDeleteSubmit);
+
+deleteCancelBtn.addEventListener("click", () => {
+  closeModal(deleteModal);
+});
+
+deleteClosBtn.addEventListener("click", () => {
+  closeModal(deleteModal);
 });
 
 previewModalCloseBtn.addEventListener("click", function () {
