@@ -128,12 +128,12 @@ function getCardElement(data) {
 // Modal helpers
 function openModal(modal) {
   modal.classList.add("modal_opened");
-  modal.addEventListener("mousedown", closeOnOverlay);
+  modal.addEventListener("keyup", closeOnEscape);
 }
 
 function closeModal(modal) {
   modal.classList.remove("modal_opened");
-  modal.removeEventListener("mousedown", closeOnOverlay);
+  modal.removeEventListener("keyup", closeOnEscape);
 }
 
 function closeOnOverlay(evt) {
@@ -153,14 +153,14 @@ function closeOnEscape(evt) {
 
 // Delete handlers
 function handleDeleteCard(cardElement, data) {
-  selectedCard = cardElement; 
-  selectedCardId = data._id; 
+  selectedCard = cardElement;
+  selectedCardId = data._id;
   openModal(deleteModal);
 }
 
 function handleDeleteSubmit(evt) {
   evt.preventDefault();
-  deleteSubmitBtn.textContent = "Deleting..."; 
+  deleteSubmitBtn.textContent = "Deleting...";
   api
     .deleteCard(selectedCardId)
     .then(() => {
@@ -171,7 +171,7 @@ function handleDeleteSubmit(evt) {
     })
     .catch(console.error)
     .finally(() => {
-      deleteSubmitBtn.textContent = "Delete"; 
+      deleteSubmitBtn.textContent = "Delete";
     });
 }
 
@@ -213,7 +213,7 @@ function handleAvatarSubmit(evt) {
 
 function handleAddCardSubmit(evt) {
   evt.preventDefault();
-  addCardSubmitBtn.textContent = "Saving..."; 
+  addCardSubmitBtn.textContent = "Saving...";
   api
     .createCard({
       name: nameInputEl.value,
@@ -227,11 +227,11 @@ function handleAddCardSubmit(evt) {
     })
     .catch(console.error)
     .finally(() => {
-      addCardSubmitBtn.textContent = "Save"; 
+      addCardSubmitBtn.textContent = "Save";
+    });
 }
 
 // Event listeners
-document.addEventListener("keydown", closeOnEscape);
 
 editProfileBtn.addEventListener("click", function () {
   editProfileNameInput.value = profileNameEl.textContent;
