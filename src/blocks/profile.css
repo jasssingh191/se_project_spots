@@ -8,6 +8,9 @@
 .profile__avatar-container {
   position: relative;
   margin-right: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .profile__avatar-btn {
@@ -29,6 +32,7 @@
   line-height: 100%;
   color: #ffffff;
   background: none;
+  transition: background-color 0.3s;
 }
 
 .profile__avatar-container:hover .profile__avatar-btn {
@@ -43,6 +47,8 @@
   width: 190px;
   height: 190px;
   border-radius: 8px;
+  object-fit: cover;
+  display: block;
 }
 
 .profile__column {
