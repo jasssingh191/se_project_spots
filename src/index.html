@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,27 +5,39 @@
     <meta name="description" content="photo gallery" />
     <meta name="author" content="Jaspreet Singh" />
     <meta name="keywords" content="HTML, CSS, image sharing" />
-    <link rel="stylesheet" href="./pages/index.css" />
     <link rel="icon" href="./favicon.ico" type="image/x-icon" />
     <title>Document</title>
   </head>
   <body>
     <div class="page">
       <header class="header">
-        <img src="./images/Logo.svg" alt="spots logo" class="header__logo" />
+        <img
+          src="<%= require('./images/Logo.svg') %>"
+          alt="spots logo"
+          class="header__logo"
+        />
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img
-            src="./images/avatar.jpg"
-            alt="profile avatar"
-            class="profile__avatar"
-          />
+          <div class="profile__avatar-container">
+            <button class="profile__avatar-btn">
+              <img
+                class="profile__pencil-icon"
+                src="<%= require('./images/pencil-light-icon.svg') %>"
+                alt="Pencil icon"
+              />
+            </button>
+            <img
+              src="<%= require('./images/avatar.jpg') %>"
+              alt="profile avatar"
+              class="profile__avatar"
+            />
+          </div>
           <div class="profile__column">
             <h1 class="profile__name">Bessie Coleman</h1>
             <p class="profile__description">Civil Aviator</p>
             <button type="button" class="profile__edit-btn">
-              <img src="./images/Edit-icon.svg" alt="edit icon" />
+              <img src="<%= require('./images/Edit-icon.svg') %>" />
               Edit Profile
             </button>
           </div>
@@ -50,7 +61,9 @@
       <footer class="footer" id="contacts">
         <p class="footer__copyright">&copy; 2025 Spots</p>
       </footer>
-      <div class="modal" id="edit-profile-modal">
+
+      <!-- Edit Profile Modal -->
+      <div class="modal" id="edit__profile-modal">
         <div class="modal__container">
           <button type="button" class="modal__close-btn"></button>
           <h2 class="modal__title">Edit profile</h2>
@@ -88,6 +101,8 @@
           </form>
         </div>
       </div>
+
+      <!-- New Post Modal -->
       <div class="modal" id="new-post-modal">
         <div class="modal__container">
           <button type="button" class="modal__close-btn"></button>
@@ -122,6 +137,7 @@
           </form>
         </div>
       </div>
+
       <div class="modal modal_type_preview" id="preview-modal">
         <div class="modal__image-container">
           <button
@@ -129,16 +145,51 @@
             class="modal__close-btn modal__close-btn_type_preview"
             type="button"
           ></button>
-          <img
-            src="https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/spots/7-photo-by-griffin-wooldridge-from-pexels.jpg"
-            alt="Golden Gate Bridge"
-            class="modal__image"
-          />
-          <p class="modal__caption">Golden Gate Bridge</p>
+          <img src="" alt="" class="modal__image" />
+          <p class="modal__caption"></p>
         </div>
       </div>
-      <script src="./scripts/validation.js"></script>
-      <script src="./scripts/index.js"></script>
+    </div>
+
+    <!-- Avatar Modal -->
+    <div class="modal" id="profile__avatar-modal">
+      <div class="modal__container">
+        <button type="button" class="modal__close-btn"></button>
+        <h2 class="modal__title">Edit profile avatar</h2>
+        <form class="modal__form">
+          <label for="profile__avatar-input" class="modal__label">
+            Profile Picture
+            <input
+              id="profile__avatar-input"
+              type="url"
+              class="modal__input"
+              name="avatar"
+              placeholder="Paste the link to an image"
+              required
+            />
+            <span id="profile__avatar-input-error" class="modal__error"></span>
+          </label>
+          <button type="submit" class="modal__submit-btn">Save</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal" id="delete-modal">
+      <div class="modal__container">
+        <button type="button" class="modal__close-btn"></button>
+        <h2 class="modal__title">
+          Are you sure you want to delete this image?
+        </h2>
+        <form class="modal__form modal__form_delete" id="delete-form">
+          <button type="submit" class="modal__submit-btn modal__submit-btn_red">
+            Delete
+          </button>
+          <button type="button" class="modal__cancel-btn modal__submit-btn">
+            Cancel
+          </button>
+        </form>
+      </div>
     </div>
   </body>
 </html>
