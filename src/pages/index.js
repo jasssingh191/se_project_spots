@@ -1,5 +1,9 @@
 import "../pages/index.css";
-import { enableValidation, validationConfig } from "../scripts/validation.js";
+import {
+  enableValidation,
+  validationConfig,
+  resetValidation,
+} from "../scripts/validation.js";
 import Api from "../utils/Api.js";
 
 const api = new Api({
@@ -21,6 +25,7 @@ const editProfileBtn = document.querySelector(".profile__edit-btn");
 const avatarModalBtn = document.querySelector(".profile__avatar-btn");
 const profileNameEl = document.querySelector(".profile__name");
 const profileDescriptionEl = document.querySelector(".profile__description");
+const profileAvatarEl = document.querySelector(".profile__avatar");
 
 // Edit profile modal elements
 const editProfileModal = document.querySelector("#edit__profile-modal");
@@ -217,7 +222,8 @@ function handleAvatarSubmit(evt) {
   api
     .updateAvatar({ avatar: avatarInputEl.value })
     .then((data) => {
-      document.querySelector(".profile__avatar").src = data.avatar;
+      profileAvatarEl.src = data.avatar;
+
       closeModal(avatarModal);
       evt.target.reset();
     })
@@ -252,7 +258,14 @@ function handleAddCardSubmit(evt) {
 editProfileBtn.addEventListener("click", function () {
   editProfileNameInput.value = profileNameEl.textContent;
   editProfileDescriptionInput.value = profileDescriptionEl.textContent;
+
   resetSubmitButton(editProfileSubmitBtn, "Save");
+
+  resetValidation(
+    editProfileForm,
+    [editProfileNameInput, editProfileDescriptionInput],
+    validationConfig,
+  );
   openModal(editProfileModal);
 });
 
@@ -263,7 +276,16 @@ editProfileCloseBtn.addEventListener("click", function () {
 editProfileForm.addEventListener("submit", handleEditProfileSubmit);
 
 newPostBtn.addEventListener("click", function () {
-  resetSubmitButton(addCardSubmitBtn, "Save");
+  addCardFormElement.reset();
+
+  resetValidation(
+    addCardFormElement,
+    [nameInputEl, linkInputEl],
+    validationConfig,
+  );
+
+  addCardSubmitBtn.disabled = true;
+  addCardSubmitBtn.classList.add(validationConfig.inactiveButtonClass);
   openModal(newPostModal);
 });
 
@@ -274,7 +296,13 @@ newPostCloseBtn.addEventListener("click", function () {
 addCardFormElement.addEventListener("submit", handleAddCardSubmit);
 
 avatarModalBtn.addEventListener("click", function () {
-  resetSubmitButton(avatarSubmitBtn, "Save");
+  avatarForm.reset();
+  resetValidation(avatarForm, [avatarInputEl], validationConfig);
+
+  avatarSubmitBtn.textContent = "Save";
+  avatarSubmitBtn.disabled = true;
+  avatarSubmitBtn.classList.add(validationConfig.inactiveButtonClass);
+
   openModal(avatarModal);
 });
 
